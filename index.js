@@ -13,7 +13,11 @@ global.db = db;
 
 // ***** BASE PATH FOR DEPLOYMENT *****
 const BASE_PATH = '/usr/348';
-app.locals.basePath = BASE_PATH; // available as basePath in all views
+app.locals.basePath = BASE_PATH;
+
+app.get('/', (req, res) => {
+  res.redirect(BASE_PATH + '/');
+});
 
 // View engine
 app.set('view engine', 'ejs');
