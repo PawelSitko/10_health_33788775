@@ -1,145 +1,42 @@
-//routes/workouts.js
-const express = require("express");
+// routes/workouts.js
+const express = require('express');
 const router = express.Router();
-const db = require("../db");
 
+// shared DB pool
+const db = global.db || require('../db');
 
-const redirectLogin = (req, res, next) => {
-  if (!req.session || !req.session.userId) {
-    return res.redirect("/users/login");
+// Middleware to require login
+function requireLogin(req, res, next) {
+  if (!req.session || !req.session.user) {
+    // redirect to login, keeping the original url in ?next=
+    return res.redirect('/users/login?next=/workouts');
   }
   next();
-};
-
-
-function listWorkouts(req, res, next) {
-  const userId = req.session.userId;
-
-  const sql = `
-    SELECT * FROM workouts
-    WHERE user_id = ?
-    ORDER BY workout_date DESC
-  `;
-
-  db.query(sql, [userId], (err, results) => {
-    if (err) return next(err);
-    res.render("workouts_list.ejs", { workouts: results });
-  });
 }
 
-router.get("/", redirectLogin, listWorkouts);
-router.get("/list", redirectLogin, listWorkouts);
+// GET /workouts – show list of workouts (protected)
+router.get('/', requireLogin, (req, res) => {
+  const userId = req.session.user.id;
 
-//Show add workout form
-router.get("/add", redirectLogin, (req, res) => {
-  res.render("workouts_add.ejs", { error: null, formData: {} });
-});
+  db.query(
+    'SELECT * FROM workouts WHERE user_id = ? ORDER BY date DESC',
+    [userId],
+    (err, results) => {
+      if (err) {
+        console.error('Error fetching workouts:', err);
+        return res.render('workouts', {
+          error: 'Could not load workouts.',
+          workouts: [],
+        });
+      }
 
-//Handle add workout 
-router.post("/add", redirectLogin, (req, res, next) => {
-  const userId = req.session.userId;
-  const body = req.body || {};
-
-  let { workout_date, workout_type, duration_minutes, intensity, notes } = body;
-
-  // sanitise
-  if (req.sanitize) {
-    workout_type = req.sanitize(workout_type);
-    intensity = req.sanitize(intensity);
-    notes = req.sanitize(notes || "");
-  }
-
-  // basic validation
-  if (!workout_date || !workout_type || !duration_minutes) {
-    return res.render("workouts_add.ejs", {
-      error: "Date, type and duration are required.",
-      formData: body,
-    });
-  }
-
-  const sql = `
-    INSERT INTO workouts (user_id, workout_date, workout_type, duration_minutes, intensity, notes)
-    VALUES (?, ?, ?, ?, ?, ?)
-  `;
-
-  const params = [
-    userId,
-    workout_date,
-    workout_type,
-    duration_minutes,
-    intensity || null,
-    notes || null,
-  ];
-
-  db.query(sql, params, (err) => {
-    if (err) return next(err);
-    res.redirect("/workouts");
-  });
-});
-
-// --------- SHOW edit workout form ----------
-router.get("/edit/:id", redirectLogin, (req, res, next) => {
-  const workoutId = req.params.id;
-  const userId = req.session.userId;
-
-  const sql = `SELECT * FROM workouts WHERE id = ? AND user_id = ?`;
-
-  db.query(sql, [workoutId, userId], (err, results) => {
-    if (err) return next(err);
-    if (results.length === 0) {
-      return res.send("Workout not found.");
+      res.render('workouts', {
+        error: null,
+        workouts: results,
+        user: req.session.user,
+      });
     }
-    res.render("workouts_edit.ejs", { workout: results[0], error: null });
-  });
-});
-
-// --------- HANDLE edit workout ----------
-router.post("/edit/:id", redirectLogin, (req, res, next) => {
-  const workoutId = req.params.id;
-  const userId = req.session.userId;
-  const body = req.body || {};
-
-  let { workout_date, workout_type, duration_minutes, intensity, notes } = body;
-
-  if (req.sanitize) {
-    workout_type = req.sanitize(workout_type);
-    intensity = req.sanitize(intensity);
-    notes = req.sanitize(notes || "");
-  }
-
-  const sql = `
-    UPDATE workouts
-    SET workout_date = ?, workout_type = ?, duration_minutes = ?, intensity = ?, notes = ?
-    WHERE id = ? AND user_id = ?
-  `;
-
-  const params = [
-    workout_date,
-    workout_type,
-    duration_minutes,
-    intensity || null,
-    notes || null,
-    workoutId,
-    userId,
-  ];
-
-  db.query(sql, params, (err) => {
-    if (err) return next(err);
-    res.redirect("/workouts");
-  });
-});
-
-// --------- DELETE workout ----------
-router.get("/delete/:id", redirectLogin, (req, res, next) => {
-  const workoutId = req.params.id;
-  const userId = req.session.userId;
-
-  const sql = `DELETE FROM workouts WHERE id = ? AND user_id = ?`;
-
-  db.query(sql, [workoutId, userId], (err) => {
-    if (err) return next(err);
-    res.redirect("/workouts");
-  });
+  );
 });
 
 module.exports = router;

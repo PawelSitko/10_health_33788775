@@ -1,41 +1,30 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <title>Health Tracker</title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/styles.css"><!-- if you have one -->
   </head>
   <body>
-    <div class="container">
+    <header>
       <h1>Health Tracker</h1>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/workouts">Workouts</a></li>
+          <li><a href="/users/login">Login</a></li>
+          <li><a href="/users/register">Register</a></li>
+        </ul>
+      </nav>
+    </header>
 
-      <div class="nav-links">
-        <a href="/">🏠 Home</a>
-        <a href="/users/login">🔑 Login</a>
-        <a href="/users/register">📝 Register</a>
-        <a href="/workouts">🏋️ Workouts</a>
-      </div>
-
-
-      <% if (session && session.username) { %>
-        <p>Logged in as <strong><%= session.username %></strong></p>
-        <p><a href="/users/logout" class="btn btn-secondary">Logout</a></p>
-      <% } else { %>
-        <p>You are not logged in.</p>
-      <% } %>
-
-      <h2>What this app does</h2>
+    <main>
+      <h2>Welcome to the Health Tracker app</h2>
+      <p>Track your workouts and stay on top of your fitness goals.</p>
       <p>
-        This is a simple health and workout tracking app for the lab.
-        You can log in, add workouts, and view your workout history.
+        <a href="/workouts">View your workouts</a> or
+        <a href="/users/register">create an account</a> to get started.
       </p>
-
-      <h2>Quick links</h2>
-      <ul>
-        <li><a href="/users/login">Login</a></li>
-        <li><a href="/workouts">View your workouts</a></li>
-        <li><a href="/workouts/add">Add a new workout</a></li>
-      </ul>
-    </div>
+    </main>
   </body>
 </html>
