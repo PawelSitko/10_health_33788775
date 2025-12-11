@@ -29,10 +29,10 @@
         <header class="card-header">
           <h1>Your workouts</h1>
           <nav class="nav-links">
-            <a href="/">🏠 Home</a>
-            <a href="/users/login">🔑 Login</a>
-            <a href="/users/register">📝 Register</a>
-            <a href="/workouts/list">💪 Workouts</a>
+            <a href="<%= basePath %>/">🏠 Home</a>
+            <a href="<%= basePath %>/users/login">🔑 Login</a>
+            <a href="<%= basePath %>/users/register">📝 Register</a>
+            <a href="<%= basePath %>/workouts/list">💪 Workouts</a>
           </nav>
         </header>
 
@@ -42,8 +42,8 @@
           <% } %>
 
           <div class="actions-row">
-            <a class="btn" href="/workouts/add">➕ Add workout</a>
-            <a class="btn secondary" href="/workouts/search">🔍 Search</a>
+            <a class="btn" href="<%= basePath %>/workouts/add">➕ Add workout</a>
+            <a class="btn secondary" href="<%= basePath %>/workouts/search">🔍 Search</a>
           </div>
 
           <% if (error) { %>
@@ -55,8 +55,8 @@
               <thead>
                 <tr>
                   <th>Date</th>
-                  <th>Activity</th>
-                  <th>Duration</th>
+                  <th>Type</th>
+                  <th>Duration (min)</th>
                   <th>Intensity</th>
                   <th>Notes</th>
                   <th></th>
@@ -65,12 +65,22 @@
               <tbody>
                 <% workouts.forEach(w => { %>
                   <tr>
-                    <td><%= w.date ? (w.date.toISOString ? w.date.toISOString().slice(0,10) : w.date) : '' %></td>
-                    <td><%= w.activity || '' %></td>
-                    <td><%= w.duration || '' %></td>
+                    <td>
+                      <%= w.workout_date
+                          ? (w.workout_date.toISOString
+                              ? w.workout_date.toISOString().slice(0,10)
+                              : w.workout_date)
+                          : '' %>
+                    </td>
+                    <td><%= w.workout_type || '' %></td>
+                    <td><%= w.duration_minutes || '' %></td>
                     <td><%= w.intensity || '' %></td>
                     <td><%= w.notes || '' %></td>
-                    <td><a href="/workouts/edit/<%= w.id %>">Edit</a></td>
+                    <td>
+                      <a href="<%= basePath %>/workouts/edit/<%= w.id %>">Edit</a>
+                      |
+                      <a href="<%= basePath %>/workouts/delete/<%= w.id %>">Delete</a>
+                    </td>
                   </tr>
                 <% }) %>
               </tbody>
