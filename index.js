@@ -2,11 +2,14 @@
 require('dotenv').config();
 
 const express = require('express');
+const app = express();
 const path = require('path');
 const session = require('express-session');
-const expressSanitizer = require('express-sanitizer');
-const app = express();
-const port = 8000;
+
+//use the pool from db.js
+const db = require('./db');
+global.db = db;
+
 
 // View engine
 app.set('view engine', 'ejs');
@@ -36,9 +39,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Database – make pool globally available like in Bertie's
-const db = require('./db');
-global.db = db;
+
 
 // App-level data (like shopName before)
 app.locals.appData = { appName: "Health Tracker" };
