@@ -1,8 +1,16 @@
-const express = require('express');
-const router = express.Router();
-const bcrypt = require('bcrypt');
+// index.js
+require('dotenv').config();
 
-const db = global.db || require('../db');
+const express = require('express');
+const app = express();
+const path = require('path');
+const session = require('express-session');
+const expressSanitizer = require('express-sanitizer');
+
+// DB pool from db.js
+const db = require('./db');
+global.db = db;
+
 const SALT_ROUNDS = 10;
 
 // GET /users/register
