@@ -1,0 +1,26 @@
+<% layout("layout") %>
+
+<h1>Health Tracker</h1>
+
+<% if (!session || !session.userId) { %>
+  <p>You are not logged in.</p>
+<% } else { %>
+  <p>Logged in as <strong><%= session.username %></strong></p>
+<% } %>
+
+<h2>What this app does</h2>
+<p>
+  This is a simple health & workout tracker.  
+  You can log in, add workouts, and view your workout history.
+</p>
+
+<h2>Quick links</h2>
+<ul>
+  <% if (!session || !session.userId) { %>
+    <li><a href="/users/login">Login</a></li>
+    <li><a href="/users/register">Register</a></li>
+  <% } else { %>
+    <li><a href="/workouts">View your workouts</a></li>
+    <li><a href="/workouts/add">Add a new workout</a></li>
+  <% } %>
+</ul>

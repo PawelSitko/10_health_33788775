@@ -1,0 +1,25 @@
+<header class="top-nav">
+  <nav>
+    <a href="/">🏠 Home</a>
+
+    <div class="nav-right">
+
+      <% if (session && session.userId) { %>
+        <span class="welcome">Welcome, <strong><%= session.username %></strong></span>
+
+        <a href="/workouts">🏋️ Workouts</a>
+        <a href="/workouts/add">➕ Add Workout</a>
+
+        <form action="/users/logout" method="post" class="inline-form">
+          <button type="submit">🚪 Logout</button>
+        </form>
+
+      <% } else { %>
+        <a href="/users/login">🔑 Login</a>
+        <a href="/users/register">📝 Register</a>
+        <a href="/workouts">🏋️ Workouts</a>
+      <% } %>
+
+    </div>
+  </nav>
+</header>
