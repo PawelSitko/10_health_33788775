@@ -1,75 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Add workout – Health Tracker</title>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Add Workout</title>
+
     <style>
-      body { margin:0; font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif; background:#f5f7fb; }
-      .page { min-height:100vh; display:flex; align-items:flex-start; justify-content:center; padding:40px 16px; }
-      .card { max-width:800px; width:100%; background:#fff; border-radius:18px; box-shadow:0 20px 45px rgba(15,23,42,0.12); padding:32px 40px; }
-      .card-header { display:flex; flex-direction:column; gap:8px; margin-bottom:24px; }
-      .card-header h1 { margin:0; font-size:28px; }
-      .nav-links { display:flex; gap:16px; font-size:14px; }
-      .nav-links a { text-decoration:none; color:#2563eb; }
-      .nav-links a:hover { text-decoration:underline; }
-      .form-row { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; font-size:14px; }
-      .form-row input, .form-row textarea { padding:10px 12px; border-radius:10px; border:1px solid #d1d5db; font-size:14px; }
-      .btn { border:none; border-radius:999px; padding:10px 20px; background:#2563eb; color:white; font-weight:600; cursor:pointer; }
-      .btn:hover { background:#1d4ed8; }
-      .error { margin-bottom:16px; color:#b91c1c; background:#fee2e2; padding:8px 10px; border-radius:8px; font-size:14px; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            background: white;
+            margin: 40px auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 12px;
+            display: block;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        textarea {
+            height: 100px;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .error-box {
+            background: #ffdddd;
+            color: #a30000;
+            border: 1px solid #a30000;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+        }
+
+        .nav {
+            margin-bottom: 20px;
+        }
+
+        .nav a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .nav a:hover {
+            text-decoration: underline;
+        }
     </style>
-  </head>
+</head>
 
-  <body>
-    <main class="page">
-      <section class="card">
-        <header class="card-header">
-          <h1>Add a workout</h1>
-          <nav class="nav-links">
-            <a href="/">🏠 Home</a>
-            <a href="/users/login">🔑 Login</a>
-            <a href="/users/register">📝 Register</a>
-            <a href="/workouts/list">💪 Workouts</a>
-          </nav>
-        </header>
+<body>
 
-        <section>
-          <% const data = formData || {}; %>
+<div class="container">
 
-          <% if (error) { %>
-            <p class="error"><%= error %></p>
-          <% } %>
+    <!-- Navigation -->
+    <div class="nav">
+        <a href="/">🏠 Home</a>
+        <a href="/workouts/list">📋 Workouts</a>
+        <a href="/users/logout">🚪 Logout</a>
+    </div>
 
-          <form method="POST" action="/workouts/add">
-            <div class="form-row">
-              <label>Date</label>
-              <input type="date" name="date" value="<%= data.date || '' %>" required />
-            </div>
+    <h1>Add a Workout</h1>
 
-            <div class="form-row">
-              <label>Activity</label>
-              <input type="text" name="activity" value="<%= data.activity || '' %>" required />
-            </div>
+    <% if (error) { %>
+        <div class="error-box"><%= error %></div>
+    <% } %>
 
-            <div class="form-row">
-              <label>Duration (minutes)</label>
-              <input type="number" name="duration" min="1" value="<%= data.duration || '' %>" required />
-            </div>
+    <form method="POST" action="<%= basePath %>/workouts/add">
 
-            <div class="form-row">
-              <label>Intensity</label>
-              <input type="text" name="intensity" value="<%= data.intensity || '' %>" />
-            </div>
+        <label for="workout_date">Workout Date</label>
+        <input type="date" id="workout_date" name="workout_date" required>
 
-            <div class="form-row">
-              <label>Notes</label>
-              <textarea name="notes" rows="3"><%= data.notes || '' %></textarea>
-            </div>
+        <label for="workout_type">Workout Type</label>
+        <input type="text" id="workout_type" name="workout_type" placeholder="Running, Gym, Swimming..." required>
 
-            <button type="submit" class="btn">Save workout</button>
-          </form>
-        </section>
-      </section>
-    </main>
-  </body>
+        <label for="duration_minutes">Duration (minutes)</label>
+        <input type="number" id="duration_minutes" name="duration_minutes" min="1" required>
+
+        <label for="intensity">Intensity</label>
+        <select id="intensity" name="intensity" required>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select>
+
+        <label for="notes">Notes (optional)</label>
+        <textarea id="notes" name="notes"></textarea>
+
+        <button type="submit">Add Workout</button>
+    </form>
+
+</div>
+
+</body>
 </html>
