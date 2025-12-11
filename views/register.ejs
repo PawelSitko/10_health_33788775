@@ -1,100 +1,81 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title>Register</title>
-    <link rel="stylesheet" href="/style.css">
+    <meta charset="UTF-8" />
+    <title>Create an account – Health Tracker</title>
+    <style>
+      body { margin:0; font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif; background:#f5f7fb; }
+      .page { min-height:100vh; display:flex; align-items:flex-start; justify-content:center; padding:40px 16px; }
+      .card { max-width:900px; width:100%; background:#fff; border-radius:18px; box-shadow:0 20px 45px rgba(15,23,42,0.12); padding:32px 40px; }
+      .card-header { display:flex; flex-direction:column; gap:8px; margin-bottom:24px; }
+      .card-header h1 { margin:0; font-size:32px; }
+      .nav-links { display:flex; gap:16px; font-size:14px; }
+      .nav-links a { text-decoration:none; color:#2563eb; }
+      .nav-links a:hover { text-decoration:underline; }
+      .form-row { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; font-size:14px; }
+      .form-row input { padding:10px 12px; border-radius:10px; border:1px solid #d1d5db; font-size:14px; }
+      .btn { border:none; border-radius:999px; padding:10px 20px; background:#2563eb; color:white; font-weight:600; cursor:pointer; }
+      .btn:hover { background:#1d4ed8; }
+      .error { margin-bottom:16px; color:#b91c1c; background:#fee2e2; padding:8px 10px; border-radius:8px; font-size:14px; }
+      .mt { margin-top:16px; font-size:14px; }
+    </style>
   </head>
+
   <body>
-    <div class="container">
-      <h1>Create an account</h1>
+    <main class="page">
+      <section class="card">
+        <header class="card-header">
+          <h1>Create an account</h1>
+          <nav class="nav-links">
+            <a href="/">🏠 Home</a>
+            <a href="/users/login">🔑 Login</a>
+            <a href="/users/register">📝 Register</a>
+            <a href="/workouts/list">💪 Workouts</a>
+          </nav>
+        </header>
 
-      <div class="nav-links">
-        <a href="/">🏠 Home</a>
-        <a href="/users/login">🔑 Login</a>
-        <a href="/workouts">🏋️ Workouts</a>
-      </div>
+        <section>
+          <% const data = formData || {}; %>
 
-      <% if (error) { %>
-        <div class="error-box">
-          <%= error %>
-        </div>
-      <% } %>
+          <% if (error) { %>
+            <p class="error"><%= error %></p>
+          <% } %>
 
-      <% const data = formData || {}; %>
+          <form method="POST" action="/users/register">
+            <div class="form-row">
+              <label>First name</label>
+              <input type="text" name="first" value="<%= data.first || '' %>" required />
+            </div>
 
-      <form method="POST" action="/usr/348/users/login">
-        <div class="form-row">
-          <label for="first">First name</label>
-          <input
-            id="first"
-            type="text"
-            name="first"
-            value="<%= data.first || '' %>"
-            required
-          >
-        </div>
+            <div class="form-row">
+              <label>Last name</label>
+              <input type="text" name="last" value="<%= data.last || '' %>" required />
+            </div>
 
-        <div class="form-row">
-          <label for="last">Last name</label>
-          <input
-            id="last"
-            type="text"
-            name="last"
-            value="<%= data.last || '' %>"
-            required
-          >
-        </div>
+            <div class="form-row">
+              <label>Email</label>
+              <input type="email" name="email" value="<%= data.email || '' %>" required />
+            </div>
 
-        <div class="form-row">
-          <label for="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            name="email"
-            value="<%= data.email || '' %>"
-            required
-          >
-        </div>
+            <div class="form-row">
+              <label>Username</label>
+              <input type="text" name="username" value="<%= data.username || '' %>" required />
+            </div>
 
-        <div class="form-row">
-          <label for="username">Username</label>
-          <input
-            id="username"
-            type="text"
-            name="username"
-            value="<%= data.username || '' %>"
-            required
-          >
-        </div>
+            <div class="form-row">
+              <label>Password</label>
+              <input type="password" name="password" required />
+            </div>
 
-        <div class="form-row">
-          <label for="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            name="password"
-            required
-          >
-        </div>
+            <button type="submit" class="btn">Register</button>
+          </form>
 
-        <div class="form-row">
-          <label for="confirm">Confirm password</label>
-          <input
-            id="confirm"
-            type="password"
-            name="confirm"
-            required
-          >
-        </div>
-
-        <button type="submit" class="btn btn-primary">Register</button>
-      </form>
-
-      <p style="margin-top: 16px;">
-        Already have an account?
-        <a href="/users/login">Log in here</a>.
-      </p>
-    </div>
+          <p class="mt">
+            Already have an account?
+            <a href="/users/login">Log in here.</a>
+          </p>
+        </section>
+      </section>
+    </main>
   </body>
 </html>

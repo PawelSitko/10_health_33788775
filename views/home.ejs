@@ -3,41 +3,52 @@
   <head>
     <meta charset="UTF-8" />
     <title>Health Tracker – Home</title>
-    <link rel="stylesheet" href="/style.css">
-
+    <style>
+      body { margin: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; background:#f5f7fb; }
+      .page { min-height: 100vh; display:flex; align-items:flex-start; justify-content:center; padding:40px 16px; }
+      .card { max-width: 900px; width:100%; background:#fff; border-radius:18px; box-shadow:0 20px 45px rgba(15,23,42,0.12); padding:32px 40px; }
+      .card-header { display:flex; flex-direction:column; gap:8px; margin-bottom:24px; }
+      .card-header h1 { margin:0; font-size:32px; }
+      .nav-links { display:flex; gap:16px; font-size:14px; }
+      .nav-links a { text-decoration:none; color:#2563eb; }
+      .nav-links a:hover { text-decoration:underline; }
+      h2 { margin-top:0; }
+      ul { padding-left:18px; }
+      .mt { margin-top:16px; }
+    </style>
   </head>
+
   <body>
     <main class="page">
-      <!-- Top card / container, same structure style as register -->
       <section class="card">
         <header class="card-header">
           <h1>Health Tracker</h1>
-
-          <!-- Simple nav same as register page -->
           <nav class="nav-links">
-            <a href="/usr/348/">Home</a>
-            <a href="/usr/348/users/login">Login</a>
-            <a href="/usr/348/users/register">Register</a>
-            <a href="/usr/348/workouts/list">Workouts</a>
+            <a href="/">🏠 Home</a>
+            <a href="/users/login">🔑 Login</a>
+            <a href="/users/register">📝 Register</a>
+            <a href="/workouts/list">💪 Workouts</a>
           </nav>
         </header>
 
-        <section class="card-body">
+        <section>
           <% if (session && session.user) { %>
             <p>You are logged in as <strong><%= session.user.username %></strong>.</p>
             <p>
-              Go to your <a href="/workouts/list">workouts list</a> or
+              View your <a href="/workouts/list">workouts</a> or
               <a href="/users/logout">log out</a>.
             </p>
           <% } else { %>
             <p>You are not logged in.</p>
+            <h2>What this app does</h2>
             <p>
-              This is a simple health &amp; workout tracker. You can:
+              This is a simple health &amp; workout tracker. You can log in, add workouts,
+              and view your workout history.
             </p>
             <ul>
-              <li>✅ Create an account</li>
-              <li>✅ Log in</li>
-              <li>✅ Add and view your workouts</li>
+              <li>Log your training sessions</li>
+              <li>Review previous workouts</li>
+              <li>Keep track of your progress</li>
             </ul>
 
             <p class="mt">

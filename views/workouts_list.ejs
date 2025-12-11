@@ -2,8 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Your Workouts – Health Tracker</title>
-    <link rel="stylesheet" href="/style.css">
+    <title>Your workouts – Health Tracker</title>
+    <style>
+      body { margin:0; font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif; background:#f5f7fb; }
+      .page { min-height:100vh; display:flex; align-items:flex-start; justify-content:center; padding:40px 16px; }
+      .card { max-width:1000px; width:100%; background:#fff; border-radius:18px; box-shadow:0 20px 45px rgba(15,23,42,0.12); padding:32px 40px; }
+      .card-header { display:flex; flex-direction:column; gap:8px; margin-bottom:24px; }
+      .card-header h1 { margin:0; font-size:28px; }
+      .nav-links { display:flex; gap:16px; font-size:14px; }
+      .nav-links a { text-decoration:none; color:#2563eb; }
+      .nav-links a:hover { text-decoration:underline; }
+      .actions-row { display:flex; gap:12px; margin-bottom:16px; }
+      .btn { border:none; border-radius:999px; padding:8px 16px; background:#2563eb; color:white; font-size:14px; cursor:pointer; text-decoration:none; display:inline-block; }
+      .btn.secondary { background:#e5e7eb; color:#111827; }
+      .btn:hover { filter:brightness(0.95); }
+      .error { margin-bottom:16px; color:#b91c1c; background:#fee2e2; padding:8px 10px; border-radius:8px; font-size:14px; }
+      table { width:100%; border-collapse:collapse; font-size:14px; margin-top:8px; }
+      th, td { padding:8px 10px; border-bottom:1px solid #e5e7eb; text-align:left; }
+      th { background:#f9fafb; font-weight:600; }
+    </style>
   </head>
 
   <body>
@@ -11,25 +28,22 @@
       <section class="card">
         <header class="card-header">
           <h1>Your workouts</h1>
-
           <nav class="nav-links">
-            <a href="/usr/348/">Home</a>
-            <a href="/usr/348/users/login">Login</a>
-            <a href="/usr/348/users/register">Register</a>
-            <a href="/usr/348/workouts/list">Workouts</a>
+            <a href="/">🏠 Home</a>
+            <a href="/users/login">🔑 Login</a>
+            <a href="/users/register">📝 Register</a>
+            <a href="/workouts/list">💪 Workouts</a>
           </nav>
         </header>
 
-        <section class="card-body">
+        <section>
           <% if (user) { %>
             <p>Logged in as <strong><%= user.username %></strong>.</p>
-          <% } else { %>
-            <p>You are not logged in.</p>
           <% } %>
 
           <div class="actions-row">
             <a class="btn" href="/workouts/add">➕ Add workout</a>
-            <a class="btn secondary" href="/workouts/search">🔍 Search workouts</a>
+            <a class="btn secondary" href="/workouts/search">🔍 Search</a>
           </div>
 
           <% if (error) { %>
@@ -37,7 +51,7 @@
           <% } %>
 
           <% if (workouts && workouts.length > 0) { %>
-            <table class="workouts-table">
+            <table>
               <thead>
                 <tr>
                   <th>Date</th>
@@ -49,16 +63,14 @@
                 </tr>
               </thead>
               <tbody>
-                <% workouts.forEach(function(w) { %>
+                <% workouts.forEach(w => { %>
                   <tr>
-                    <td><%= w.date ? w.date.toISOString ? w.date.toISOString().slice(0,10) : w.date : '' %></td>
+                    <td><%= w.date ? (w.date.toISOString ? w.date.toISOString().slice(0,10) : w.date) : '' %></td>
                     <td><%= w.activity || '' %></td>
                     <td><%= w.duration || '' %></td>
                     <td><%= w.intensity || '' %></td>
                     <td><%= w.notes || '' %></td>
-                    <td>
-                      <a href="/workouts/edit/<%= w.id %>">Edit</a>
-                    </td>
+                    <td><a href="/workouts/edit/<%= w.id %>">Edit</a></td>
                   </tr>
                 <% }) %>
               </tbody>

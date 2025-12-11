@@ -4,12 +4,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 
 const db = global.db || require('../db');
-
 const SALT_ROUNDS = 10;
-
-// IMPORTANT: this is your deployment base path on doc.gold.ac.uk
-// Adjust the number if your user folder is different.
-const BASE_PATH = '/usr/348';
 
 // GET /users/register – show registration form
 router.get('/register', (req, res) => {
@@ -67,8 +62,7 @@ router.post('/register', (req, res) => {
             }
 
             // After successful registration, send them to login
-            // NOTE: include BASE_PATH so we stay under /usr/348 on Apache
-            res.redirect(`${BASE_PATH}/users/login`);
+            res.redirect('/users/login');
           }
         );
       } catch (e) {
@@ -125,8 +119,8 @@ router.post('/login', (req, res) => {
           last: user.last
         };
 
-        // After login, go to workouts list under /usr/348
-        res.redirect(`${BASE_PATH}/workouts/list`);
+        // After login, go to workouts list
+        res.redirect('/workouts/list');
       } catch (e2) {
         console.error('Error comparing password:', e2);
         res.render('login', { error: 'Unexpected error.' });
@@ -138,8 +132,7 @@ router.post('/login', (req, res) => {
 // GET /users/logout – clear session
 router.get('/logout', (req, res) => {
   req.session.destroy(() => {
-    // Back to login under /usr/348
-    res.redirect(`${BASE_PATH}/users/login`);
+    res.redirect('/users/login');
   });
 });
 

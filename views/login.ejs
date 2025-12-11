@@ -3,7 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <title>Login – Health Tracker</title>
-    <link rel="stylesheet" href="/style.css">
+    <style>
+      body { margin:0; font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif; background:#f5f7fb; }
+      .page { min-height:100vh; display:flex; align-items:flex-start; justify-content:center; padding:40px 16px; }
+      .card { max-width:700px; width:100%; background:#fff; border-radius:18px; box-shadow:0 20px 45px rgba(15,23,42,0.12); padding:32px 40px; }
+      .card-header { display:flex; flex-direction:column; gap:8px; margin-bottom:24px; }
+      .card-header h1 { margin:0; font-size:28px; }
+      .nav-links { display:flex; gap:16px; font-size:14px; }
+      .nav-links a { text-decoration:none; color:#2563eb; }
+      .nav-links a:hover { text-decoration:underline; }
+      .form-row { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; font-size:14px; }
+      .form-row input { padding:10px 12px; border-radius:10px; border:1px solid #d1d5db; font-size:14px; }
+      .btn { border:none; border-radius:999px; padding:10px 20px; background:#2563eb; color:white; font-weight:600; cursor:pointer; }
+      .btn:hover { background:#1d4ed8; }
+      .error { margin-bottom:16px; color:#b91c1c; background:#fee2e2; padding:8px 10px; border-radius:8px; font-size:14px; }
+      .mt { margin-top:16px; font-size:14px; }
+    </style>
   </head>
 
   <body>
@@ -11,42 +26,28 @@
       <section class="card">
         <header class="card-header">
           <h1>Log in</h1>
-
-          <!-- Same Nav as other pages -->
           <nav class="nav-links">
-            <a href="/usr/348/">Home</a>
-            <a href="/usr/348/users/login">Login</a>
-            <a href="/usr/348/users/register">Register</a>
-            <a href="/usr/348/workouts/list">Workouts</a>
+            <a href="/">🏠 Home</a>
+            <a href="/users/login">🔑 Login</a>
+            <a href="/users/register">📝 Register</a>
+            <a href="/workouts/list">💪 Workouts</a>
           </nav>
         </header>
 
-        <section class="card-body">
-          
-          <!-- Show error if login failed -->
-          <% if (typeof error !== "undefined") { %>
+        <section>
+          <% if (error) { %>
             <p class="error"><%= error %></p>
           <% } %>
 
-          <form method="POST" action="/usr/348/users/login">
+          <form method="POST" action="/users/login">
             <div class="form-row">
               <label>Username</label>
-              <input 
-                type="text" 
-                name="username" 
-                placeholder="Enter your username"
-                required 
-              />
+              <input type="text" name="username" required />
             </div>
 
             <div class="form-row">
               <label>Password</label>
-              <input 
-                type="password" 
-                name="password" 
-                placeholder="Enter your password"
-                required 
-              />
+              <input type="password" name="password" required />
             </div>
 
             <button type="submit" class="btn">Log in</button>
@@ -56,7 +57,6 @@
             Don’t have an account?
             <a href="/users/register">Register here.</a>
           </p>
-
         </section>
       </section>
     </main>
