@@ -60,7 +60,7 @@ router.post('/register', (req, res) => {
               });
             }
 
-            // redirect browser to /usr/348/users/login (or your basePath)
+            // redirect browser to
             res.redirect(`${basePath}/users/login`);
           }
         );
@@ -118,7 +118,7 @@ router.post('/login', (req, res) => {
           last: user.last
         };
 
-        // redirect to /usr/348/workouts/list (or your basePath)
+        // redirect to /usr/348/workouts/list 
         res.redirect(`${basePath}/workouts/list`);
       } catch (e2) {
         console.error('Error comparing password:', e2);

@@ -11,9 +11,8 @@ function requireLogin(req, res, next) {
   next();
 }
 
-// ------------------------------------------------------------
+
 // LIST WORKOUTS  ->  GET /workouts/list
-// ------------------------------------------------------------
 router.get('/list', requireLogin, (req, res) => {
   const userId = req.session.user.id;
 
@@ -39,9 +38,8 @@ router.get('/list', requireLogin, (req, res) => {
   );
 });
 
-// ------------------------------------------------------------
+
 // ADD WORKOUT FORM  ->  GET /workouts/add
-// ------------------------------------------------------------
 router.get('/add', requireLogin, (req, res) => {
   res.render('workouts_add', {
     user: req.session.user,
@@ -49,9 +47,8 @@ router.get('/add', requireLogin, (req, res) => {
   });
 });
 
-// ------------------------------------------------------------
+
 // ADD WORKOUT (POST) -> POST /workouts/add
-// ------------------------------------------------------------
 router.post('/add', requireLogin, (req, res) => {
   const userId = req.session.user.id;
   const { date, type, duration, intensity, notes } = req.body;
@@ -80,9 +77,8 @@ router.post('/add', requireLogin, (req, res) => {
   );
 });
 
-// ------------------------------------------------------------
+
 // EDIT WORKOUT FORM -> GET /workouts/edit/:id
-// ------------------------------------------------------------
 router.get('/edit/:id', requireLogin, (req, res) => {
   const id = req.params.id;
 
@@ -104,9 +100,8 @@ router.get('/edit/:id', requireLogin, (req, res) => {
   );
 });
 
-// ------------------------------------------------------------
+
 // UPDATE WORKOUT -> POST /workouts/edit/:id
-// ------------------------------------------------------------
 router.post('/edit/:id', requireLogin, (req, res) => {
   const id = req.params.id;
   const { date, type, duration, intensity, notes } = req.body;
@@ -145,9 +140,8 @@ router.get('/delete/:id', requireLogin, (req, res) => {
   );
 });
 
-// ------------------------------------------------------------
-// SEARCH WORKOUTS -> GET /workouts/search?q=...
-// ------------------------------------------------------------
+
+// SEARCH WORKOUTS 
 router.get('/search', requireLogin, (req, res) => {
   const userId = req.session.user.id;
   const q = (req.query.q || '').trim();
