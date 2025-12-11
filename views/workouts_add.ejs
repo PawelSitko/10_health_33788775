@@ -94,9 +94,9 @@
 
     <!-- Navigation -->
     <div class="nav">
-        <a href="<%= basePath %>/">🏠 Home</a>
-        <a href="<%= basePath %>/workouts/list">📋 Workouts</a>
-        <a href="<%= basePath %>/users/logout">🚪 Logout</a>
+        <a href="/">🏠 Home</a>
+        <a href="/workouts/list">📋 Workouts</a>
+        <a href="/users/logout">🚪 Logout</a>
     </div>
 
     <h1>Add a Workout</h1>
@@ -105,16 +105,15 @@
         <div class="error-box"><%= error %></div>
     <% } %>
 
-    <form method="POST" action="<%= basePath %>/workouts/add">
+    <form method="POST" action="/workouts/add">
+        <label for="date">Workout Date</label>
+        <input type="date" id="date" name="date" required>
 
-        <label for="workout_date">Workout Date</label>
-        <input type="date" id="workout_date" name="workout_date" required>
+        <label for="type">Workout Type</label>
+        <input type="text" id="type" name="type" placeholder="Running, Gym, Swimming..." required>
 
-        <label for="workout_type">Workout Type</label>
-        <input type="text" id="workout_type" name="workout_type" placeholder="Running, Gym, Swimming..." required>
-
-        <label for="duration_minutes">Duration (minutes)</label>
-        <input type="number" id="duration_minutes" name="duration_minutes" min="1" required>
+        <label for="duration">Duration (minutes)</label>
+        <input type="number" id="duration" name="duration" min="1" required>
 
         <label for="intensity">Intensity</label>
         <select id="intensity" name="intensity" required>
