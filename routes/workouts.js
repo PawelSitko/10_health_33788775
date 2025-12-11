@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-// Middleware to require login
+// Middleware to ensure user is logged in
 function requireLogin(req, res, next) {
   if (!req.session.user) {
     const basePath = req.app.locals.basePath || "";
@@ -10,9 +10,9 @@ function requireLogin(req, res, next) {
   next();
 }
 
-// ---------------------------
-// GET /workouts/list
-// ---------------------------
+// ------------------------------------------------------------
+// LIST WORKOUTS
+// ------------------------------------------------------------
 router.get('/list', requireLogin, (req, res) => {
   const basePath = req.app.locals.basePath || "";
   const userId = req.session.user.id;
@@ -23,62 +23,72 @@ router.get('/list', requireLogin, (req, res) => {
     (err, results) => {
       if (err) {
         console.error("Error fetching workouts:", err);
-        return res.send("Database error");
+        return res.render('workouts_list', {
+          workouts: [],
+          basePath,
+          user: req.session.user,
+          error: "Could not load workouts from database."
+        });
       }
 
       res.render('workouts_list', {
         workouts: results,
         basePath,
-        user: req.session.user
+        user: req.session.user,
+        error: null
       });
     }
   );
 });
 
-// ---------------------------
-// GET /workouts/add
-// ---------------------------
+// ------------------------------------------------------------
+// ADD WORKOUT FORM
+// ------------------------------------------------------------
 router.get('/add', requireLogin, (req, res) => {
   const basePath = req.app.locals.basePath || "";
   res.render('workouts_add', {
     basePath,
-    user: req.session.user
+    user: req.session.user,
+    error: null
   });
 });
 
-// ---------------------------
-// POST /workouts/add
-// ---------------------------
+// ------------------------------------------------------------
+// ADD WORKOUT (POST)
+// ------------------------------------------------------------
 router.post('/add', requireLogin, (req, res) => {
   const basePath = req.app.locals.basePath || "";
   const userId = req.session.user.id;
 
-  const { workout_date, workout_type, duration_minutes, intensity, notes } = req.body;
+  const { date, type, duration, intensity, notes } = req.body;
 
   db.query(
     "INSERT INTO workouts (user_id, workout_date, workout_type, duration_minutes, intensity, notes) VALUES (?, ?, ?, ?, ?, ?)",
-    [userId, workout_date, workout_type, duration_minutes, intensity, notes],
+    [userId, date, type, duration, intensity, notes],
     (err) => {
       if (err) {
         console.error("Error inserting workout:", err);
-        return res.send("Database error");
+        return res.render('workouts_add', {
+          basePath,
+          user: req.session.user,
+          error: "Could not save workout. Check your input."
+        });
       }
-
       res.redirect(`${basePath}/workouts/list`);
     }
   );
 });
 
-// ---------------------------
-// GET /workouts/edit/:id
-// ---------------------------
+// ------------------------------------------------------------
+// EDIT WORKOUT (FORM)
+// ------------------------------------------------------------
 router.get('/edit/:id', requireLogin, (req, res) => {
   const basePath = req.app.locals.basePath || "";
-  const workoutId = req.params.id;
+  const id = req.params.id;
 
   db.query(
     "SELECT * FROM workouts WHERE id = ? AND user_id = ?",
-    [workoutId, req.session.user.id],
+    [id, req.session.user.id],
     (err, results) => {
       if (err || results.length === 0) {
         return res.send("Workout not found.");
@@ -87,28 +97,29 @@ router.get('/edit/:id', requireLogin, (req, res) => {
       res.render('workouts_edit', {
         workout: results[0],
         basePath,
-        user: req.session.user
+        user: req.session.user,
+        error: null
       });
     }
   );
 });
 
-// ---------------------------
-// POST /workouts/edit/:id
-// ---------------------------
+// ------------------------------------------------------------
+// UPDATE WORKOUT (POST)
+// ------------------------------------------------------------
 router.post('/edit/:id', requireLogin, (req, res) => {
   const basePath = req.app.locals.basePath || "";
-  const workoutId = req.params.id;
+  const id = req.params.id;
 
-  const { workout_date, workout_type, duration_minutes, intensity, notes } = req.body;
+  const { date, type, duration, intensity, notes } = req.body;
 
   db.query(
     "UPDATE workouts SET workout_date=?, workout_type=?, duration_minutes=?, intensity=?, notes=? WHERE id=? AND user_id=?",
-    [workout_date, workout_type, duration_minutes, intensity, notes, workoutId, req.session.user.id],
+    [date, type, duration, intensity, notes, id, req.session.user.id],
     (err) => {
       if (err) {
         console.error("Error updating workout:", err);
-        return res.send("Database error");
+        return res.send("Update failed.");
       }
 
       res.redirect(`${basePath}/workouts/list`);
@@ -116,20 +127,20 @@ router.post('/edit/:id', requireLogin, (req, res) => {
   );
 });
 
-// ---------------------------
-// GET /workouts/delete/:id
-// ---------------------------
+// ------------------------------------------------------------
+// DELETE WORKOUT
+// ------------------------------------------------------------
 router.get('/delete/:id', requireLogin, (req, res) => {
   const basePath = req.app.locals.basePath || "";
-  const workoutId = req.params.id;
+  const id = req.params.id;
 
   db.query(
-    "DELETE FROM workouts WHERE id = ? AND user_id = ?",
-    [workoutId, req.session.user.id],
+    "DELETE FROM workouts WHERE id=? AND user_id=?",
+    [id, req.session.user.id],
     (err) => {
       if (err) {
         console.error("Error deleting workout:", err);
-        return res.send("Database error");
+        return res.send("Delete failed.");
       }
 
       res.redirect(`${basePath}/workouts/list`);
@@ -137,28 +148,33 @@ router.get('/delete/:id', requireLogin, (req, res) => {
   );
 });
 
-// ---------------------------
-// GET /workouts/search
-// ---------------------------
+// ------------------------------------------------------------
+// SEARCH WORKOUTS
+// ------------------------------------------------------------
 router.get('/search', requireLogin, (req, res) => {
   const basePath = req.app.locals.basePath || "";
   const userId = req.session.user.id;
-  const query = `%${req.query.q || ""}%`;
+  const q = `%${req.query.q || ""}%`;
 
   db.query(
-    "SELECT * FROM workouts WHERE user_id = ? AND workout_type LIKE ? ORDER BY workout_date DESC",
-    [userId, query],
+    "SELECT * FROM workouts WHERE user_id = ? AND (workout_type LIKE ? OR notes LIKE ?) ORDER BY workout_date DESC",
+    [userId, q, q],
     (err, results) => {
       if (err) {
-        console.error("Error searching workouts:", err);
-        return res.send("Database error");
+        console.error("Search error:", err);
+        return res.render('workouts_list', {
+          workouts: [],
+          basePath,
+          user: req.session.user,
+          error: "Search failed."
+        });
       }
 
-      res.render('workouts_search', {
+      res.render('workouts_list', {
         workouts: results,
-        q: req.query.q || "",
         basePath,
-        user: req.session.user
+        user: req.session.user,
+        error: null
       });
     }
   );
