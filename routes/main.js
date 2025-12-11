@@ -1,15 +1,20 @@
-//routes/main.js
+// routes/main.js
 const express = require('express');
 const router = express.Router();
 
-//Home page – renders index.ejs
+// Home page
 router.get('/', (req, res) => {
-  res.render('index.ejs');
+  res.render('home');
 });
 
-//About page – renders about.ejs
+// Optional index page (if you use index.ejs as landing)
+router.get('/index', (req, res) => {
+  res.render('index');
+});
+
+// About page
 router.get('/about', (req, res) => {
-  res.render('about.ejs');
+  res.render('about');
 });
 
 module.exports = router;

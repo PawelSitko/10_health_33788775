@@ -5,13 +5,11 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const session = require('express-session');
+const expressSanitizer = require('express-sanitizer');
 
 // Use the pool from db.js
 const db = require('./db');
 global.db = db;
-
-// Sanitizer
-const expressSanitizer = require('express-sanitizer');
 
 // View engine
 app.set('view engine', 'ejs');
@@ -40,7 +38,7 @@ app.use((req, res, next) => {
 });
 
 // App-level globals
-app.locals.appData = { appName: "Health Tracker" };
+app.locals.appData = { appName: 'Health Tracker' };
 
 // ROUTES
 const mainRoutes = require('./routes/main');
@@ -52,7 +50,7 @@ app.use('/users', userRoutes);
 const workoutsRoutes = require('./routes/workouts');
 app.use('/workouts', workoutsRoutes);
 
-// PORT (this fixes your VM error)
+// PORT
 const port = process.env.PORT || 8000;
 
 // Start server

@@ -3,14 +3,15 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 
-// Use the shared pool from global or require as fallback
 const db = global.db || require('../db');
-
 const SALT_ROUNDS = 10;
 
 // GET /users/register – show registration form
 router.get('/register', (req, res) => {
-  res.render('register', { error: null });
+  res.render('register', {
+    error: null,
+    formData: {} // so register.ejs can safely do const data = formData || {}
+  });
 });
 
 // POST /users/register – handle registration
@@ -18,7 +19,10 @@ router.post('/register', async (req, res) => {
   const { first, last, email, username, password } = req.body;
 
   if (!first || !last || !email || !username || !password) {
-    return res.render('register', { error: 'Please fill in all fields.' });
+    return res.render('register', {
+      error: 'Please fill in all fields.',
+      formData: req.body
+    });
   }
 
   try {
@@ -29,11 +33,17 @@ router.post('/register', async (req, res) => {
       async (err, results) => {
         if (err) {
           console.error('Error checking existing user:', err);
-          return res.render('register', { error: 'Database error.' });
+          return res.render('register', {
+            error: 'Database error.',
+            formData: req.body
+          });
         }
 
         if (results.length > 0) {
-          return res.render('register', { error: 'Username is already taken.' });
+          return res.render('register', {
+            error: 'Username is already taken.',
+            formData: req.body
+          });
         }
 
         // Hash password
@@ -46,11 +56,13 @@ router.post('/register', async (req, res) => {
           (err2) => {
             if (err2) {
               console.error('Error inserting user:', err2);
-              return res.render('register', { error: 'Error creating account.' });
+              return res.render('register', {
+                error: 'Error creating account.',
+                formData: req.body
+              });
             }
 
-            // ✅ IMPORTANT: use relative redirect so hostname/port is preserved
-            // Redirect to login after successful registration
+            // Success – send to login (relative path, preserves :8000)
             res.redirect('/users/login');
           }
         );
@@ -58,7 +70,10 @@ router.post('/register', async (req, res) => {
     );
   } catch (e) {
     console.error('Error during registration:', e);
-    res.render('register', { error: 'Unexpected error.' });
+    res.render('register', {
+      error: 'Unexpected error.',
+      formData: req.body
+    });
   }
 });
 
@@ -105,8 +120,8 @@ router.post('/login', (req, res) => {
           last: user.last,
         };
 
-        // If there was a ?next=/something param, go there; otherwise /workouts
-        const nextUrl = req.query.next || '/workouts';
+        // Go to intended page or workouts list
+        const nextUrl = req.query.next || '/workouts/list';
         res.redirect(nextUrl);
       } catch (e2) {
         console.error('Error comparing password:', e2);
