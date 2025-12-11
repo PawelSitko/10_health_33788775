@@ -4,18 +4,23 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 
 const db = global.db || require('../db');
+
 const SALT_ROUNDS = 10;
+
+// IMPORTANT: this is your deployment base path on doc.gold.ac.uk
+// Adjust the number if your user folder is different.
+const BASE_PATH = '/usr/348';
 
 // GET /users/register – show registration form
 router.get('/register', (req, res) => {
   res.render('register', {
     error: null,
-    formData: {} // so register.ejs can safely do const data = formData || {}
+    formData: {} // register.ejs uses: const data = formData || {};
   });
 });
 
 // POST /users/register – handle registration
-router.post('/register', async (req, res) => {
+router.post('/register', (req, res) => {
   const { first, last, email, username, password } = req.body;
 
   if (!first || !last || !email || !username || !password) {
@@ -25,28 +30,27 @@ router.post('/register', async (req, res) => {
     });
   }
 
-  try {
-    // Check if username already exists
-    db.query(
-      'SELECT id FROM users WHERE username = ?',
-      [username],
-      async (err, results) => {
-        if (err) {
-          console.error('Error checking existing user:', err);
-          return res.render('register', {
-            error: 'Database error.',
-            formData: req.body
-          });
-        }
+  // Check if username already exists
+  db.query(
+    'SELECT id FROM users WHERE username = ?',
+    [username],
+    async (err, results) => {
+      if (err) {
+        console.error('Error checking existing user:', err);
+        return res.render('register', {
+          error: 'Database error.',
+          formData: req.body
+        });
+      }
 
-        if (results.length > 0) {
-          return res.render('register', {
-            error: 'Username is already taken.',
-            formData: req.body
-          });
-        }
+      if (results.length > 0) {
+        return res.render('register', {
+          error: 'Username is already taken.',
+          formData: req.body
+        });
+      }
 
-        // Hash password
+      try {
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
         // Insert new user
@@ -62,19 +66,20 @@ router.post('/register', async (req, res) => {
               });
             }
 
-            // Success – send to login (relative path, preserves :8000)
-            res.redirect('/users/login');
+            // After successful registration, send them to login
+            // NOTE: include BASE_PATH so we stay under /usr/348 on Apache
+            res.redirect(`${BASE_PATH}/users/login`);
           }
         );
+      } catch (e) {
+        console.error('Error during registration:', e);
+        res.render('register', {
+          error: 'Unexpected error.',
+          formData: req.body
+        });
       }
-    );
-  } catch (e) {
-    console.error('Error during registration:', e);
-    res.render('register', {
-      error: 'Unexpected error.',
-      formData: req.body
-    });
-  }
+    }
+  );
 });
 
 // GET /users/login – show login form
@@ -117,12 +122,11 @@ router.post('/login', (req, res) => {
           id: user.id,
           username: user.username,
           first: user.first,
-          last: user.last,
+          last: user.last
         };
 
-        // Go to intended page or workouts list
-        const nextUrl = req.query.next || '/workouts/list';
-        res.redirect(nextUrl);
+        // After login, go to workouts list under /usr/348
+        res.redirect(`${BASE_PATH}/workouts/list`);
       } catch (e2) {
         console.error('Error comparing password:', e2);
         res.render('login', { error: 'Unexpected error.' });
@@ -134,7 +138,8 @@ router.post('/login', (req, res) => {
 // GET /users/logout – clear session
 router.get('/logout', (req, res) => {
   req.session.destroy(() => {
-    res.redirect('/users/login');
+    // Back to login under /usr/348
+    res.redirect(`${BASE_PATH}/users/login`);
   });
 });
 
