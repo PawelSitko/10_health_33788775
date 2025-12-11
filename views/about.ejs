@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title><%= appData ? appData.appName : "Health Tracker" %> - About</title>
+  </head>
+  <body>
+    <h1>About <%= appData ? appData.appName : "Health Tracker" %></h1>
+
+    <p>
+      This is a small health and fitness tracking application built as part of the
+      Dynamic Web Applications final lab.
+    </p>
+
+    <p>
+      It stores users and workouts in a MySQL database, and exposes JSON APIs for
+      programmatic access, as well as HTML pages for listing, adding and searching workouts.
+    </p>
+
+    <p>
+      Features include:
+    </p>
+    <ul>
+      <li>MySQL database for users and workouts</li>
+      <li>REST-style JSON endpoints for /users and /workouts</li>
+      <li>EJS views for a simple web front end</li>
+      <li>Password hashing using bcrypt for users</li>
+      <li>Basic validation and sanitisation for form input</li>
+    </ul>
+
+    <p><a href="/">Back to home</a></p>
+  </body>
+</html>

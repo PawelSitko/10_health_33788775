@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Add Workout</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Add a Workout</h1>
+
+      <div class="nav-links">
+        <a href="/workouts">⬅ Back to workouts</a>
+        <a href="/">🏠 Home</a>
+      </div>
+
+      <% const data = formData || {}; %>
+
+      <% if (error) { %>
+        <div class="error-box">
+          <%= error %>
+        </div>
+      <% } %>
+
+      <form method="POST" action="/workouts/add">
+        <div class="form-row">
+          <label for="workout_date">Workout date</label>
+          <input
+            id="workout_date"
+            type="date"
+            name="workout_date"
+            value="<%= data.workout_date || '' %>"
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <label for="workout_type">Workout type</label>
+          <input
+            id="workout_type"
+            type="text"
+            name="workout_type"
+            placeholder="e.g. Running, Gym, Cycling"
+            value="<%= data.workout_type || '' %>"
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <label for="duration_minutes">Duration (minutes)</label>
+          <input
+            id="duration_minutes"
+            type="number"
+            name="duration_minutes"
+            min="1"
+            value="<%= data.duration_minutes || '' %>"
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <label for="intensity">Intensity</label>
+          <select id="intensity" name="intensity" required>
+            <option value="">Choose...</option>
+            <option value="low"    <%= data.intensity === 'low' ? 'selected' : '' %>>Low</option>
+            <option value="medium" <%= data.intensity === 'medium' ? 'selected' : '' %>>Medium</option>
+            <option value="high"   <%= data.intensity === 'high' ? 'selected' : '' %>>High</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="notes">Notes (optional)</label>
+          <textarea id="notes" name="notes"><%= data.notes || '' %></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save workout</button>
+      </form>
+    </div>
+  </body>
+</html>

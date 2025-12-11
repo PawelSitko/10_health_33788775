@@ -1,9 +1,9 @@
---Drop and recreate database
+-- Drop and recreate database
 DROP DATABASE IF EXISTS health;
 CREATE DATABASE health;
 USE health;
 
---Users table
+-- Users table
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   first VARCHAR(50),
@@ -13,7 +13,7 @@ CREATE TABLE users (
   password VARCHAR(255)
 );
 
---Workouts table
+-- Workouts table
 CREATE TABLE workouts (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,

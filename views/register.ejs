@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Create an account</h1>
+
+      <div class="nav-links">
+        <a href="/">🏠 Home</a>
+        <a href="/users/login">🔑 Login</a>
+        <a href="/workouts">🏋️ Workouts</a>
+      </div>
+
+      <% if (error) { %>
+        <div class="error-box">
+          <%= error %>
+        </div>
+      <% } %>
+
+      <% const data = formData || {}; %>
+
+      <form method="POST" action="/users/register">
+        <div class="form-row">
+          <label for="first">First name</label>
+          <input
+            id="first"
+            type="text"
+            name="first"
+            value="<%= data.first || '' %>"
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <label for="last">Last name</label>
+          <input
+            id="last"
+            type="text"
+            name="last"
+            value="<%= data.last || '' %>"
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            value="<%= data.email || '' %>"
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <label for="username">Username</label>
+          <input
+            id="username"
+            type="text"
+            name="username"
+            value="<%= data.username || '' %>"
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <label for="confirm">Confirm password</label>
+          <input
+            id="confirm"
+            type="password"
+            name="confirm"
+            required
+          >
+        </div>
+
+        <button type="submit" class="btn btn-primary">Register</button>
+      </form>
+
+      <p style="margin-top: 16px;">
+        Already have an account?
+        <a href="/users/login">Log in here</a>.
+      </p>
+    </div>
+  </body>
+</html>
