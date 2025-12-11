@@ -4,17 +4,19 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 
 const db = global.db || require('../db');
-const SALT_ROUNDS = 10;
 
-// GET /users/register – show registration form
+const SALT_ROUNDS = 10;
+const BASE_PATH = '/usr/348'; // must match index.js
+
+// GET /usr/348/users/register
 router.get('/register', (req, res) => {
   res.render('register', {
     error: null,
-    formData: {} // register.ejs uses: const data = formData || {};
+    formData: {}
   });
 });
 
-// POST /users/register – handle registration
+// POST /usr/348/users/register
 router.post('/register', (req, res) => {
   const { first, last, email, username, password } = req.body;
 
@@ -25,7 +27,6 @@ router.post('/register', (req, res) => {
     });
   }
 
-  // Check if username already exists
   db.query(
     'SELECT id FROM users WHERE username = ?',
     [username],
@@ -48,7 +49,6 @@ router.post('/register', (req, res) => {
       try {
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-        // Insert new user
         db.query(
           'INSERT INTO users (first, last, email, username, password) VALUES (?, ?, ?, ?, ?)',
           [first, last, email, username, hashedPassword],
@@ -61,8 +61,8 @@ router.post('/register', (req, res) => {
               });
             }
 
-            // After successful registration, send them to login
-            res.redirect('/users/login');
+            // After register, go to login under /usr/348
+            res.redirect(`${BASE_PATH}/users/login`);
           }
         );
       } catch (e) {
@@ -76,12 +76,12 @@ router.post('/register', (req, res) => {
   );
 });
 
-// GET /users/login – show login form
+// GET /usr/348/users/login
 router.get('/login', (req, res) => {
   res.render('login', { error: null });
 });
 
-// POST /users/login – handle login
+// POST /usr/348/users/login
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
 
@@ -111,7 +111,7 @@ router.post('/login', (req, res) => {
           return res.render('login', { error: 'Invalid username or password.' });
         }
 
-        // Save minimal info in session
+        // Save to session
         req.session.user = {
           id: user.id,
           username: user.username,
@@ -119,8 +119,8 @@ router.post('/login', (req, res) => {
           last: user.last
         };
 
-        // After login, go to workouts list
-        res.redirect('/workouts/list');
+        // After login, go to workouts list under /usr/348
+        res.redirect(`${BASE_PATH}/workouts/list`);
       } catch (e2) {
         console.error('Error comparing password:', e2);
         res.render('login', { error: 'Unexpected error.' });
@@ -129,10 +129,10 @@ router.post('/login', (req, res) => {
   );
 });
 
-// GET /users/logout – clear session
+// GET /usr/348/users/logout
 router.get('/logout', (req, res) => {
   req.session.destroy(() => {
-    res.redirect('/users/login');
+    res.redirect(`${BASE_PATH}/users/login`);
   });
 });
 

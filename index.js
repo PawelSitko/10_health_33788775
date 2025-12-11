@@ -11,6 +11,10 @@ const expressSanitizer = require('express-sanitizer');
 const db = require('./db');
 global.db = db;
 
+// ***** BASE PATH FOR DEPLOYMENT *****
+const BASE_PATH = '/usr/348';
+app.locals.basePath = BASE_PATH; // available as basePath in all views
+
 // View engine
 app.set('view engine', 'ejs');
 
@@ -19,8 +23,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(expressSanitizer());
 
-// Static files (CSS, images, client JS)
-app.use(express.static(path.join(__dirname, 'public')));
+// Static files (if you have any in /public)
+app.use(BASE_PATH + '/public', express.static(path.join(__dirname, 'public')));
 
 // Sessions
 app.use(
@@ -37,23 +41,19 @@ app.use((req, res, next) => {
   next();
 });
 
-// App-level globals
-app.locals.appData = { appName: 'Health Tracker' };
-
 // ROUTES
 const mainRoutes = require('./routes/main');
-app.use('/', mainRoutes);
-
 const userRoutes = require('./routes/users');
-app.use('/users', userRoutes);
-
 const workoutsRoutes = require('./routes/workouts');
-app.use('/workouts', workoutsRoutes);
+
+// Mount everything under /usr/348
+app.use(BASE_PATH, mainRoutes);              // /usr/348/
+app.use(BASE_PATH + '/users', userRoutes);   // /usr/348/users/...
+app.use(BASE_PATH + '/workouts', workoutsRoutes); // /usr/348/workouts/...
 
 // PORT
 const port = process.env.PORT || 8000;
 
-// Start server
 app.listen(port, () => {
-  console.log(`Health app listening on port ${port}`);
+  console.log(`Health app listening on port ${port} with base path ${BASE_PATH}`);
 });
