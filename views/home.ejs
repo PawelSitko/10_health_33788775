@@ -1,26 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Health Tracker – Home</title>
+    <link rel="stylesheet" href="/style.css">
 
+  </head>
+  <body>
+    <main class="page">
+      <!-- Top card / container, same structure style as register -->
+      <section class="card">
+        <header class="card-header">
+          <h1>Health Tracker</h1>
 
-<h1>Health Tracker</h1>
+          <!-- Simple nav same as register page -->
+          <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="/users/login">Login</a>
+            <a href="/users/register"> Register</a>
+            <a href="/workouts/list"> Workouts</a>
+          </nav>
+        </header>
 
-<% if (!session || !session.userId) { %>
-  <p>You are not logged in.</p>
-<% } else { %>
-  <p>Logged in as <strong><%= session.username %></strong></p>
-<% } %>
+        <section class="card-body">
+          <% if (session && session.user) { %>
+            <p>You are logged in as <strong><%= session.user.username %></strong>.</p>
+            <p>
+              Go to your <a href="/workouts/list">workouts list</a> or
+              <a href="/users/logout">log out</a>.
+            </p>
+          <% } else { %>
+            <p>You are not logged in.</p>
+            <p>
+              This is a simple health &amp; workout tracker. You can:
+            </p>
+            <ul>
+              <li>✅ Create an account</li>
+              <li>✅ Log in</li>
+              <li>✅ Add and view your workouts</li>
+            </ul>
 
-<h2>What this app does</h2>
-<p>
-  This is a simple health & workout tracker.  
-  You can log in, add workouts, and view your workout history.
-</p>
-
-<h2>Quick links</h2>
-<ul>
-  <% if (!session || !session.userId) { %>
-    <li><a href="/users/login">Login</a></li>
-    <li><a href="/users/register">Register</a></li>
-  <% } else { %>
-    <li><a href="/workouts">View your workouts</a></li>
-    <li><a href="/workouts/add">Add a new workout</a></li>
-  <% } %>
-</ul>
+            <p class="mt">
+              <a href="/users/login">Log in</a> or
+              <a href="/users/register">create an account</a> to get started.
+            </p>
+          <% } %>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>

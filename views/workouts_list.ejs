@@ -1,61 +1,73 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title>Your Workouts</title>
+    <meta charset="UTF-8" />
+    <title>Your Workouts – Health Tracker</title>
     <link rel="stylesheet" href="/style.css">
   </head>
+
   <body>
-    <div class="container">
-      <h1>Your Workouts</h1>
+    <main class="page">
+      <section class="card">
+        <header class="card-header">
+          <h1>Your workouts</h1>
 
-      <div class="nav-links">
-        <a href="/">🏠 Home</a>
-        <a href="/workouts/add">➕ Add workout</a>
-        <a href="/users/logout">🚪 Logout</a>
-      </div>
+          <nav class="nav-links">
+            <a href="/">🏠 Home</a>
+            <a href="/users/login">🔑 Login</a>
+            <a href="/users/register">📝 Register</a>
+            <a href="/workouts/list">🐶 Workouts</a>
+          </nav>
+        </header>
 
-      <% if (!workouts || workouts.length === 0) { %>
-        <p>You have no workouts saved yet.</p>
-        <a href="/workouts/add" class="btn btn-primary">Add your first workout</a>
-      <% } else { %>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Type</th>
-              <th>Duration (min)</th>
-              <th>Intensity</th>
-              <th>Notes</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% workouts.forEach(function(w) { %>
-              <tr>
-                <td>
-                  <% if (w.workout_date && w.workout_date.toISOString) { %>
-                    <%= w.workout_date.toISOString().slice(0,10) %>
-                  <% } else { %>
-                    <%= w.workout_date %>
-                  <% } %>
-                </td>
-                <td><%= w.workout_type %></td>
-                <td><%= w.duration_minutes %></td>
-                <td><%= w.intensity %></td>
-                <td><%= w.notes || '' %></td>
-                <td>
-                  <a href="/workouts/edit/<%= w.id %>" class="btn btn-secondary">Edit</a>
-                  <a href="/workouts/delete/<%= w.id %>" class="btn btn-danger"
-                     onclick="return confirm('Delete this workout?');">
-                    Delete
-                  </a>
-                </td>
-              </tr>
-            <% }) %>
-          </tbody>
-        </table>
-      <% } %>
-    </div>
+        <section class="card-body">
+          <% if (user) { %>
+            <p>Logged in as <strong><%= user.username %></strong>.</p>
+          <% } else { %>
+            <p>You are not logged in.</p>
+          <% } %>
+
+          <div class="actions-row">
+            <a class="btn" href="/workouts/add">➕ Add workout</a>
+            <a class="btn secondary" href="/workouts/search">🔍 Search workouts</a>
+          </div>
+
+          <% if (error) { %>
+            <p class="error"><%= error %></p>
+          <% } %>
+
+          <% if (workouts && workouts.length > 0) { %>
+            <table class="workouts-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Activity</th>
+                  <th>Duration</th>
+                  <th>Intensity</th>
+                  <th>Notes</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% workouts.forEach(function(w) { %>
+                  <tr>
+                    <td><%= w.date ? w.date.toISOString ? w.date.toISOString().slice(0,10) : w.date : '' %></td>
+                    <td><%= w.activity || '' %></td>
+                    <td><%= w.duration || '' %></td>
+                    <td><%= w.intensity || '' %></td>
+                    <td><%= w.notes || '' %></td>
+                    <td>
+                      <a href="/workouts/edit/<%= w.id %>">Edit</a>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          <% } else { %>
+            <p>You don’t have any workouts yet.</p>
+          <% } %>
+        </section>
+      </section>
+    </main>
   </body>
 </html>

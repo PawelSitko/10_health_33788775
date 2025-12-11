@@ -1,44 +1,64 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title>Login</title>
+    <meta charset="UTF-8" />
+    <title>Login – Health Tracker</title>
+    <link rel="stylesheet" href="/style.css">
   </head>
+
   <body>
-    <h1>Login</h1>
+    <main class="page">
+      <section class="card">
+        <header class="card-header">
+          <h1>Log in</h1>
 
-    <% if (error) { %>
-      <p style="color:red;"><%= error %></p>
-    <% } %>
+          <!-- Same Nav as other pages -->
+          <nav class="nav-links">
+            <a href="/">🏠 Home</a>
+            <a href="/users/login">🔑 Login</a>
+            <a href="/users/register">📝 Register</a>
+            <a href="/workouts/list">🐶 Workouts</a>
+          </nav>
+        </header>
 
-    <form method="POST" action="/users/login">
-      <p>
-        <label>Username:</label>
-        <input type="text" name="username" required>
-      </p>
+        <section class="card-body">
+          
+          <!-- Show error if login failed -->
+          <% if (typeof error !== "undefined") { %>
+            <p class="error"><%= error %></p>
+          <% } %>
 
-      <p>
-        <label>Password:</label>
-        <input type="password" name="password" required>
-      </p>
+          <form method="POST" action="/users/login">
+            <div class="form-row">
+              <label>Username</label>
+              <input 
+                type="text" 
+                name="username" 
+                placeholder="Enter your username"
+                required 
+              />
+            </div>
 
-      <button type="submit">Login</button>
-    </form>
+            <div class="form-row">
+              <label>Password</label>
+              <input 
+                type="password" 
+                name="password" 
+                placeholder="Enter your password"
+                required 
+              />
+            </div>
 
-    <p><a href="/">Return Home</a></p>
+            <button type="submit" class="btn">Log in</button>
+          </form>
+
+          <p class="mt">
+            Don’t have an account?
+            <a href="/users/register">Register here.</a>
+          </p>
+
+        </section>
+      </section>
+    </main>
   </body>
 </html>
-
-<h1>Login</h1>
-
-<form method="POST" action="/users/login">
-  <label>Username:</label>
-  <input type="text" name="username" required>
-
-  <label>Password:</label>
-  <input type="password" name="password" required>
-
-  <button type="submit">Login</button>
-</form>
-
-<p>No account? <a href="/users/register">Register here</a>.</p>

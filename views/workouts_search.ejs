@@ -1,57 +1,83 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title>Search Workouts</title>
+    <meta charset="UTF-8" />
+    <title>Search workouts – Health Tracker</title>
+    <link rel="stylesheet" href="/style.css">
   </head>
+
   <body>
-    <h1>Search Workouts</h1>
+    <main class="page">
+      <section class="card">
+        <header class="card-header">
+          <h1>Search workouts</h1>
 
-    <p><a href="/">Home</a> | <a href="/workouts/list">View workouts</a> | <a href="/workouts/add">Add workout</a></p>
+          <nav class="nav-links">
+            <a href="/">🏠 Home</a>
+            <a href="/users/login">🔑 Login</a>
+            <a href="/users/register">📝 Register</a>
+            <a href="/workouts/list">🐶 Workouts</a>
+          </nav>
+        </header>
 
-    <form method="POST" action="/workouts/search">
-      <p>
-        <label>Workout type contains:
-          <input type="text" name="workout_type" value="<%= (query && query.workout_type) || '' %>">
-        </label>
-        <button type="submit">Search</button>
-      </p>
-    </form>
+        <section class="card-body">
+          <% if (user) { %>
+            <p>Searching workouts for <strong><%= user.username %></strong>.</p>
+          <% } %>
 
-    <% if (workouts === null) { %>
-      <p>Enter a workout type and click search.</p>
-    <% } else if (workouts.length === 0) { %>
-      <p>No workouts matched your search.</p>
-    <% } else { %>
-      <h2>Search results</h2>
-      <table border="1" cellpadding="4">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>User ID</th>
-            <th>Username</th>
-            <th>Date</th>
-            <th>Type</th>
-            <th>Duration (mins)</th>
-            <th>Intensity</th>
-            <th>Notes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% workouts.forEach(function(w) { %>
-            <tr>
-              <td><%= w.id %></td>
-              <td><%= w.user_id %></td>
-              <td><%= w.username || '' %></td>
-              <td><%= w.workout_date.toISOString().substring(0, 10) %></td>
-              <td><%= w.workout_type %></td>
-              <td><%= w.duration_minutes %></td>
-              <td><%= w.intensity %></td>
-              <td><%= w.notes || '' %></td>
-            </tr>
-          <% }); %>
-        </tbody>
-      </table>
-    <% } %>
+          <form method="GET" action="/workouts/search" class="search-form">
+            <div class="form-row">
+              <label>Search by activity</label>
+              <input
+                type="text"
+                name="q"
+                placeholder="e.g. run, gym, swim"
+                value="<%= query || '' %>"
+              />
+            </div>
+            <button type="submit" class="btn">Search</button>
+            <a class="btn secondary" href="/workouts/list">Back to list</a>
+          </form>
+
+          <% if (error) { %>
+            <p class="error"><%= error %></p>
+          <% } %>
+
+          <% if (typeof query !== 'undefined' && query !== '' && workouts && workouts.length === 0) { %>
+            <p>No workouts matched "<%= query %>".</p>
+          <% } %>
+
+          <% if (workouts && workouts.length > 0) { %>
+            <h2>Results</h2>
+            <table class="workouts-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Activity</th>
+                  <th>Duration</th>
+                  <th>Intensity</th>
+                  <th>Notes</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% workouts.forEach(function(w) { %>
+                  <tr>
+                    <td><%= w.date ? (w.date.toISOString ? w.date.toISOString().slice(0,10) : w.date) : '' %></td>
+                    <td><%= w.activity || '' %></td>
+                    <td><%= w.duration || '' %></td>
+                    <td><%= w.intensity || '' %></td>
+                    <td><%= w.notes || '' %></td>
+                    <td>
+                      <a href="/workouts/edit/<%= w.id %>">Edit</a>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          <% } %>
+        </section>
+      </section>
+    </main>
   </body>
 </html>

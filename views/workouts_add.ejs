@@ -1,80 +1,88 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title>Add Workout</title>
+    <meta charset="UTF-8" />
+    <title>Add workout – Health Tracker</title>
     <link rel="stylesheet" href="/style.css">
   </head>
+
   <body>
-    <div class="container">
-      <h1>Add a Workout</h1>
+    <main class="page">
+      <section class="card">
+        <header class="card-header">
+          <h1>Add a workout</h1>
 
-      <div class="nav-links">
-        <a href="/workouts">⬅ Back to workouts</a>
-        <a href="/">🏠 Home</a>
-      </div>
+          <nav class="nav-links">
+            <a href="/">🏠 Home</a>
+            <a href="/users/login">🔑 Login</a>
+            <a href="/users/register">📝 Register</a>
+            <a href="/workouts/list">🐶 Workouts</a>
+          </nav>
+        </header>
 
-      <% const data = formData || {}; %>
+        <section class="card-body">
+          <% const data = formData || {}; %>
 
-      <% if (error) { %>
-        <div class="error-box">
-          <%= error %>
-        </div>
-      <% } %>
+          <% if (error) { %>
+            <p class="error"><%= error %></p>
+          <% } %>
 
-      <form method="POST" action="/workouts/add">
-        <div class="form-row">
-          <label for="workout_date">Workout date</label>
-          <input
-            id="workout_date"
-            type="date"
-            name="workout_date"
-            value="<%= data.workout_date || '' %>"
-            required
-          >
-        </div>
+          <form method="POST" action="/workouts/add">
+            <div class="form-row">
+              <label>Date</label>
+              <input
+                type="date"
+                name="date"
+                value="<%= data.date || '' %>"
+                required
+              />
+            </div>
 
-        <div class="form-row">
-          <label for="workout_type">Workout type</label>
-          <input
-            id="workout_type"
-            type="text"
-            name="workout_type"
-            placeholder="e.g. Running, Gym, Cycling"
-            value="<%= data.workout_type || '' %>"
-            required
-          >
-        </div>
+            <div class="form-row">
+              <label>Activity</label>
+              <input
+                type="text"
+                name="activity"
+                placeholder="e.g. Run, Gym session"
+                value="<%= data.activity || '' %>"
+                required
+              />
+            </div>
 
-        <div class="form-row">
-          <label for="duration_minutes">Duration (minutes)</label>
-          <input
-            id="duration_minutes"
-            type="number"
-            name="duration_minutes"
-            min="1"
-            value="<%= data.duration_minutes || '' %>"
-            required
-          >
-        </div>
+            <div class="form-row">
+              <label>Duration (minutes)</label>
+              <input
+                type="number"
+                name="duration"
+                min="1"
+                value="<%= data.duration || '' %>"
+                required
+              />
+            </div>
 
-        <div class="form-row">
-          <label for="intensity">Intensity</label>
-          <select id="intensity" name="intensity" required>
-            <option value="">Choose...</option>
-            <option value="low"    <%= data.intensity === 'low' ? 'selected' : '' %>>Low</option>
-            <option value="medium" <%= data.intensity === 'medium' ? 'selected' : '' %>>Medium</option>
-            <option value="high"   <%= data.intensity === 'high' ? 'selected' : '' %>>High</option>
-          </select>
-        </div>
+            <div class="form-row">
+              <label>Intensity</label>
+              <input
+                type="text"
+                name="intensity"
+                placeholder="e.g. Easy, Medium, Hard"
+                value="<%= data.intensity || '' %>"
+              />
+            </div>
 
-        <div class="form-row">
-          <label for="notes">Notes (optional)</label>
-          <textarea id="notes" name="notes"><%= data.notes || '' %></textarea>
-        </div>
+            <div class="form-row">
+              <label>Notes</label>
+              <textarea
+                name="notes"
+                rows="3"
+                placeholder="Any extra details..."
+              ><%= data.notes || '' %></textarea>
+            </div>
 
-        <button type="submit" class="btn btn-primary">Save workout</button>
-      </form>
-    </div>
+            <button type="submit" class="btn">Save workout</button>
+          </form>
+        </section>
+      </section>
+    </main>
   </body>
 </html>
