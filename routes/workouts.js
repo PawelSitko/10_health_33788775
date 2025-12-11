@@ -1,9 +1,9 @@
-// routes/workouts.js
+//routes/workouts.js
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
-// --------- middleware to ensure user is logged in ----------
+
 const redirectLogin = (req, res, next) => {
   if (!req.session || !req.session.userId) {
     return res.redirect("/users/login");
@@ -11,7 +11,7 @@ const redirectLogin = (req, res, next) => {
   next();
 };
 
-// --------- LIST workouts (both /workouts and /workouts/list) ----------
+
 function listWorkouts(req, res, next) {
   const userId = req.session.userId;
 
@@ -30,12 +30,12 @@ function listWorkouts(req, res, next) {
 router.get("/", redirectLogin, listWorkouts);
 router.get("/list", redirectLogin, listWorkouts);
 
-// --------- SHOW add workout form ----------
+//Show add workout form
 router.get("/add", redirectLogin, (req, res) => {
   res.render("workouts_add.ejs", { error: null, formData: {} });
 });
 
-// --------- HANDLE add workout ----------
+//Handle add workout 
 router.post("/add", redirectLogin, (req, res, next) => {
   const userId = req.session.userId;
   const body = req.body || {};

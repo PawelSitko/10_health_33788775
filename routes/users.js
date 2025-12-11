@@ -1,4 +1,4 @@
-// routes/users.js
+//routes/users.js
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
@@ -6,16 +6,14 @@ const db = require("../db");
 
 const saltRounds = 10;
 
-// ------------------------
-// SHOW LOGIN PAGE
-// ------------------------
+//Login page
+
 router.get("/login", (req, res) => {
   res.render("login.ejs", { error: null });
 });
 
-// ------------------------
-// HANDLE LOGIN
-// ------------------------
+
+//Handle Login
 router.post("/login", (req, res, next) => {
   const { username, password } = req.body || {};
 
@@ -47,7 +45,7 @@ router.post("/login", (req, res, next) => {
         });
       }
 
-      // Save logged-in user in session
+      //Save logged-in user in session
       req.session.userId = user.id;
       req.session.username = user.username;
 
@@ -56,30 +54,27 @@ router.post("/login", (req, res, next) => {
   });
 });
 
-// ------------------------
-// LOGOUT
-// ------------------------
+
+//Logout
 router.get("/logout", (req, res) => {
   req.session.destroy(() => {
     res.redirect("/");
   });
 });
 
-// ------------------------
-// SHOW REGISTER PAGE
-// ------------------------
+
+//Register page
 router.get("/register", (req, res) => {
   res.render("register.ejs", { error: null, formData: {} });
 });
 
-// ------------------------
-// HANDLE REGISTER
-// ------------------------
+
+//Handle Register
 router.post("/register", (req, res, next) => {
   const { first, last, email, username, password, confirm } = req.body || {};
   const formData = { first, last, email, username };
 
-  // Basic validation
+  //Basic validation
   if (!first || !last || !email || !username || !password || !confirm) {
     return res.render("register.ejs", {
       error: "Please fill in all fields.",
@@ -94,7 +89,7 @@ router.post("/register", (req, res, next) => {
     });
   }
 
-  // Check username not already taken
+  //Check username not already taken
   const checkSql = "SELECT id FROM users WHERE username = ?";
 
   db.query(checkSql, [username], (err, results) => {
@@ -107,7 +102,7 @@ router.post("/register", (req, res, next) => {
       });
     }
 
-    // Hash password and insert
+    //Hash password and insert
     bcrypt.hash(password, saltRounds, (err, hash) => {
       if (err) return next(err);
 
@@ -122,7 +117,7 @@ router.post("/register", (req, res, next) => {
         (err, result) => {
           if (err) return next(err);
 
-          // Auto-login after registration
+          //Auto-login after registration
           req.session.userId = result.insertId;
           req.session.username = username;
 
