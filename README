@@ -1,0 +1,136 @@
+📘 Health Tracker – Final Lab Assignment
+Student: Pawel Sitko
+CID: 33788775
+📌 Overview
+
+Health Tracker is a Node.js + Express web application that allows users to:
+Register and log in securely (bcrypt-hashed passwords)
+Create, view, search, edit, and delete workout logs
+Maintain personal workout history stored in a MySQL database
+Use a clean, responsive interface with EJS templates
+The application runs on the Goldsmiths DOC server via Node.js and MySQL.
+
+🚀 Features Implemented
+✅ User Authentication
+Secure login & registration
+Password hashing using bcrypt
+Express sessions to maintain login state
+Login required for all workout routes
+✅ Workout Management (CRUD)
+Add a workout
+List all workouts
+Edit a workout
+Delete a workout
+
+Search workouts
+Each workout includes:
+Date
+Type
+Duration (minutes)
+Intensity
+Notes
+✅ Security Measures
+Bcrypt password hashing
+express-sanitizer for form input
+Session-based access control
+Parameterized MySQL queries (prevents SQL injection)
+🗄 Database Structure
+Database: health
+Table: workouts
+Field	Type	Description
+id	INT PK AI	Workout ID
+user_id	INT	Owner of the workout
+workout_date	DATE	Date of workout
+workout_type	VARCHAR	Activity type
+duration_minutes	INT	Duration in minutes
+intensity	VARCHAR	Low / Medium / High
+notes	TEXT	Optional notes
+Users Table: users
+Field	Description
+id	Primary key
+first	First name
+last	Last name
+email	Email
+username	Username
+password	Bcrypt hashed pass
+📦 Installation & Running the App
+1️⃣ Install dependencies
+
+Run inside the project folder:
+
+npm install
+This installs:
+express
+express-session
+express-sanitizer
+mysql2
+bcrypt
+ejs
+dotenv
+
+2️⃣ Configure .env
+
+Create a file called .env:
+
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=1234
+DB_NAME=health
+PORT=8000
+
+
+(Adjust based on your local / server setup.)
+
+3️⃣ Run the Server
+
+Local:
+node index.js
+On DOC server (example):
+node index.js &
+🌐 Accessing the App
+Local machine
+http://localhost:8000/
+Goldsmiths DOC server
+
+Example:
+http://www.doc.gold.ac.uk/workouts/list
+
+
+
+
+📁 Project Structure
+10_health_33788775/
+│── index.js
+│── db.js
+│── package.json
+│── README.md
+│── /routes
+│     ├── main.js
+│     ├── users.js
+│     └── workouts.js
+│── /views
+│     ├── login.ejs
+│     ├── register.ejs
+│     ├── home.ejs
+│     ├── workouts_list.ejs
+│     ├── workouts_add.ejs
+│     ├── workouts_edit.ejs
+│── /public
+│     └── styles.css (if used)
+
+🧪 Testing Summary
+✔ User registration works
+✔ Login & logout work
+✔ Add workout redirects to workout list
+✔ Edit & delete functionality verified
+✔ Search returns correct filtered results
+✔ Sessions persist correctly
+✔ All pages load on DOC server
+✔ Form sanitization validated
+✔ MySQL queries work without errors
+👨‍🏫 Default Test Account (for Markers)
+
+Username: gold
+Password: smiths123ABC$
+
+This account exists on the live DOC server and in the submission ZIP.
