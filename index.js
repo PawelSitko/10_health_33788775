@@ -12,7 +12,7 @@ const db = require('./db');
 global.db = db;
 
 // This is your student web path (used only in views/redirects)
-const BASE_PATH = '/usr/348'; // <-- change to /usr/364 or whatever yours is
+const BASE_PATH = '/usr/348';
 app.locals.basePath = BASE_PATH; // available in EJS as basePath
 
 const port = process.env.PORT || 8000;
