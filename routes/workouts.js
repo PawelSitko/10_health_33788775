@@ -3,22 +3,20 @@ const express = require('express');
 const router = express.Router();
 const db = global.db || require('../db');
 
-const BASE_PATH = '/usr/348';
-
 // Simple auth middleware
 function requireLogin(req, res, next) {
   if (!req.session || !req.session.user) {
-    return res.redirect(`${BASE_PATH}/users/login`);
+    return res.redirect('/users/login');
   }
   next();
 }
 
-// Redirect /usr/348/workouts → /usr/348/workouts/list
-router.get('/', (req, res) => {
-  res.redirect(`${BASE_PATH}/workouts/list`);
+// Redirect /workouts → /workouts/list
+router.get('/', requireLogin, (req, res) => {
+  res.redirect('/workouts/list');
 });
 
-// GET /usr/348/workouts/list
+// GET /workouts/list
 router.get('/list', requireLogin, (req, res) => {
   const userId = req.session.user.id;
 
@@ -44,7 +42,7 @@ router.get('/list', requireLogin, (req, res) => {
   );
 });
 
-// GET /usr/348/workouts/add
+// GET /workouts/add
 router.get('/add', requireLogin, (req, res) => {
   res.render('workouts_add', {
     error: null,
@@ -52,7 +50,7 @@ router.get('/add', requireLogin, (req, res) => {
   });
 });
 
-// POST /usr/348/workouts/add
+// POST /workouts/add
 router.post('/add', requireLogin, (req, res) => {
   const userId = req.session.user.id;
   const { date, activity, duration, intensity, notes } = req.body;
@@ -76,12 +74,12 @@ router.post('/add', requireLogin, (req, res) => {
         });
       }
 
-      res.redirect(`${BASE_PATH}/workouts/list`);
+      res.redirect('/workouts/list');
     }
   );
 });
 
-// GET /usr/348/workouts/edit/:id
+// GET /workouts/edit/:id
 router.get('/edit/:id', requireLogin, (req, res) => {
   const id = req.params.id;
   const userId = req.session.user.id;
@@ -92,7 +90,7 @@ router.get('/edit/:id', requireLogin, (req, res) => {
     (err, results) => {
       if (err || results.length === 0) {
         console.error('Error fetching workout to edit:', err);
-        return res.redirect(`${BASE_PATH}/workouts/list`);
+        return res.redirect('/workouts/list');
       }
 
       res.render('workouts_edit', {
@@ -103,7 +101,7 @@ router.get('/edit/:id', requireLogin, (req, res) => {
   );
 });
 
-// POST /usr/348/workouts/edit/:id
+// POST /workouts/edit/:id
 router.post('/edit/:id', requireLogin, (req, res) => {
   const id = req.params.id;
   const userId = req.session.user.id;
@@ -116,12 +114,12 @@ router.post('/edit/:id', requireLogin, (req, res) => {
       if (err) {
         console.error('Error updating workout:', err);
       }
-      res.redirect(`${BASE_PATH}/workouts/list`);
+      res.redirect('/workouts/list');
     }
   );
 });
 
-// GET /usr/348/workouts/search
+// GET /workouts/search
 router.get('/search', requireLogin, (req, res) => {
   const userId = req.session.user.id;
   const q = req.query.q || '';

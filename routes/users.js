@@ -4,11 +4,9 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 
 const db = global.db || require('../db');
-
 const SALT_ROUNDS = 10;
-const BASE_PATH = '/usr/348'; // must match index.js
 
-// GET /usr/348/users/register
+// GET /users/register
 router.get('/register', (req, res) => {
   res.render('register', {
     error: null,
@@ -16,7 +14,7 @@ router.get('/register', (req, res) => {
   });
 });
 
-// POST /usr/348/users/register
+// POST /users/register
 router.post('/register', (req, res) => {
   const { first, last, email, username, password } = req.body;
 
@@ -61,8 +59,8 @@ router.post('/register', (req, res) => {
               });
             }
 
-            // After register, go to login under /usr/348
-            res.redirect(`${BASE_PATH}/users/login`);
+            // After register, go to login
+            res.redirect('/users/login');
           }
         );
       } catch (e) {
@@ -76,12 +74,12 @@ router.post('/register', (req, res) => {
   );
 });
 
-// GET /usr/348/users/login
+// GET /users/login
 router.get('/login', (req, res) => {
   res.render('login', { error: null });
 });
 
-// POST /usr/348/users/login
+// POST /users/login
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
 
@@ -119,8 +117,8 @@ router.post('/login', (req, res) => {
           last: user.last
         };
 
-        // After login, go to workouts list under /usr/348
-        res.redirect(`${BASE_PATH}/workouts/list`);
+        // After login, go to workouts list
+        res.redirect('/workouts/list');
       } catch (e2) {
         console.error('Error comparing password:', e2);
         res.render('login', { error: 'Unexpected error.' });
@@ -129,10 +127,10 @@ router.post('/login', (req, res) => {
   );
 });
 
-// GET /usr/348/users/logout
+// GET /users/logout
 router.get('/logout', (req, res) => {
   req.session.destroy(() => {
-    res.redirect(`${BASE_PATH}/users/login`);
+    res.redirect('/users/login');
   });
 });
 
