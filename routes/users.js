@@ -1,3 +1,4 @@
+// routes/users.js
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
@@ -59,7 +60,7 @@ router.post('/register', (req, res) => {
               });
             }
 
-            // 👉 redirect browser to /usr/348/users/login
+            // redirect browser to /usr/348/users/login (or your basePath)
             res.redirect(`${basePath}/users/login`);
           }
         );
@@ -117,7 +118,7 @@ router.post('/login', (req, res) => {
           last: user.last
         };
 
-        // 👉 redirect to /usr/348/workouts/list
+        // redirect to /usr/348/workouts/list (or your basePath)
         res.redirect(`${basePath}/workouts/list`);
       } catch (e2) {
         console.error('Error comparing password:', e2);
