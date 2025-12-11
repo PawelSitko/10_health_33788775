@@ -1,4 +1,3 @@
-// routes/users.js
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
@@ -17,6 +16,7 @@ router.get('/register', (req, res) => {
 // POST /users/register
 router.post('/register', (req, res) => {
   const { first, last, email, username, password } = req.body;
+  const basePath = req.app.locals.basePath || '';
 
   if (!first || !last || !email || !username || !password) {
     return res.render('register', {
@@ -59,8 +59,8 @@ router.post('/register', (req, res) => {
               });
             }
 
-            // After register, go to login
-            res.redirect('/users/login');
+            // 👉 redirect browser to /usr/348/users/login
+            res.redirect(`${basePath}/users/login`);
           }
         );
       } catch (e) {
@@ -82,6 +82,7 @@ router.get('/login', (req, res) => {
 // POST /users/login
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
+  const basePath = req.app.locals.basePath || '';
 
   if (!username || !password) {
     return res.render('login', { error: 'Please enter username and password.' });
@@ -109,7 +110,6 @@ router.post('/login', (req, res) => {
           return res.render('login', { error: 'Invalid username or password.' });
         }
 
-        // Save to session
         req.session.user = {
           id: user.id,
           username: user.username,
@@ -117,8 +117,8 @@ router.post('/login', (req, res) => {
           last: user.last
         };
 
-        // After login, go to workouts list
-        res.redirect('/workouts/list');
+        // 👉 redirect to /usr/348/workouts/list
+        res.redirect(`${basePath}/workouts/list`);
       } catch (e2) {
         console.error('Error comparing password:', e2);
         res.render('login', { error: 'Unexpected error.' });
@@ -129,8 +129,9 @@ router.post('/login', (req, res) => {
 
 // GET /users/logout
 router.get('/logout', (req, res) => {
+  const basePath = req.app.locals.basePath || '';
   req.session.destroy(() => {
-    res.redirect('/users/login');
+    res.redirect(`${basePath}/users/login`);
   });
 });
 
