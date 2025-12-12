@@ -1,0 +1,25 @@
+Links for Health Tracker Website (Final Submission)
+
+Home page:
+http://www.doc.gold.ac.uk/usr/348/
+
+Login:
+http://www.doc.gold.ac.uk/users/login
+
+Register:
+http://www.doc.gold.ac.uk/users/register
+
+Workouts List:
+http://www.doc.gold.ac.uk/workouts/list
+
+Add Workout:
+http://www.doc.gold.ac.uk/workouts/add
+
+Edit Workout (example):
+http://www.doc.gold.ac.uk/workouts/edit/1
+
+Delete Workout (example):
+http://www.doc.gold.ac.uk/workouts/delete/1
+
+Search Workouts:
+http://www.doc.gold.ac.uk/workouts/search
