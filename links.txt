@@ -4,19 +4,19 @@ Home page:
 http://www.doc.gold.ac.uk/usr/348/
 
 Login:
-http://www.doc.gold.ac.uk/users/login
+http://www.doc.gold.ac.uk/usr/348/users/login
 
 Register:
-http://www.doc.gold.ac.uk/users/register
+http://www.doc.gold.ac.uk/usr/348/users/register
 
 Workouts List:
-http://www.doc.gold.ac.uk/workouts/list
+http://www.doc.gold.ac.uk/usr/348/workouts/list
 
 Add Workout:
-http://www.doc.gold.ac.uk/workouts/add
+http://www.doc.gold.ac.uk/usr/348/workouts/add
 
 Edit Workout (example):
-http://www.doc.gold.ac.uk/workouts/edit/1
+http://www.doc.gold.ac.uk/usr/348workouts/edit/1
 
 Delete Workout (example):
 http://www.doc.gold.ac.uk/workouts/delete/1
